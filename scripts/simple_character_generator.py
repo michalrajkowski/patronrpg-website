@@ -173,6 +173,19 @@ def build_random_character(data):
     console.log(f"Small Goals: {this_small_goals}")
     console.log(f"Big Goals: {this_big_goals}")
 
-    # Display the character information in the HTML output
-    output_element = document.getElementById("output")
-    output_element.textContent = character_info + "\nSkills: " + str(this_skills) + "\nSmall Goals: " + str(this_small_goals) + "\nBig Goals: " + str(this_big_goals)
+    # Formatting the output
+    small_goals_formatted = "<br><br>".join(
+        [f"<b>{title}</b>: <i>{description}</i>" for title, description in this_small_goals]
+    )
+    
+    big_goals_formatted = "<br><br>".join(
+        [f"<b>{title}</b>: <i>{description}</i>" for title, description in this_big_goals]
+    )
+
+    return (
+        "<h1>" +str(this_name) + "/<h1><br>" 
+         + "<h3>" + str(this_subclass) + "</h3><br>"+
+        "<br><h2>Skills: </h2><br>" + str(this_skills) + 
+        "<br><br><h2>Small Goals:</h2><br>" + small_goals_formatted + 
+        "<br><br><h2>Big Goals:</h2><br>" + big_goals_formatted
+    )
