@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://pyscript.net/alpha/pyscript.css" />
+    <script defer src="https://pyscript.net/alpha/pyscript.js"></script>
+    <title>Patron RPG Website</title>
+    <py-env>
+        - paths:
+          - /scripts/simple_character_generator.py
+    </py-env>
+</head>
+<body>
+    <b><p>Today is <u><label id='today'></label></u></p></b>
+    <button id="loadButton">Load Data</button>
+    <pre id="output"></pre>
+    
+    <py-script>
+        from js import fetch, console
+        from simple_character_generator import load_all_data
+        subclasses_list = []
+        subclasses_names = {}
+        subclass_skills = {}
+        all_skills = []
+        goals_neutral_small = []
+        goals_neutral_big = []
+        class_goals_small = {}
+        class_goals_big = {}
+
+        global_data = {}
+
+
+        async def load_file(file_path):
+            response = await fetch(file_path)
+            if response.ok:
+                return await response.text()
+            else:
+                console.error(f'Failed to fetch {file_path}:', response.status)
+                return None
+
+        async def fetch_load_all_data():
+            file_paths = [
+                '/data/text data/subclassess.txt',
+                '/data/text data/names.txt',
+                '/data/text data/skills_subclass.txt',
+                '/data/text data/skills_all.txt',
+                '/data/text data/goals_neutral_small.txt',
+                '/data/text data/goals_neutral_big.txt',
+                '/data/text data/goals_class_small.txt',
+                '/data/text data/goals_class_big.txt'
+            ]
+
+            all_data = []
+            for file_path in file_paths:
+                data = await load_file(file_path)
+                all_data.append(data if data is not None else '')
+
+            
+            # Unpack the loaded data to feed it into load_all_data_special
+            (
+                subclassess_data,
+                names_data,
+                subclass_skills_data,
+                all_skills_data,
+                goals_neutral_small_data,
+                goals_neutral_big_data,
+                class_goals_small_data,
+                class_goals_big_data
+            ) = all_data
+
+            # Call the special loading function
+            global_data = await load_all_data((
+                subclassess_data,
+                names_data,
+                subclass_skills_data,
+                all_skills_data,
+                goals_neutral_small_data,
+                goals_neutral_big_data,
+                class_goals_small_data,
+                class_goals_big_data
+            ))
+            
+        fetch_load_all_data()
+
+    </py-script>
+</body>
+</html>
